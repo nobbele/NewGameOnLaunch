@@ -3,19 +3,22 @@ using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Locations;
 
 namespace NewGameOnLaunch
 {
     class ModEntry : Mod {
         ModConfig Config;
 
-        public override void Entry(IModHelper helper) {
-            GameEvents.FirstUpdateTick += FirstUpdateTick;
+        public override void Entry(IModHelper helper)
+        {
+            helper.Events.GameLoop.GameLaunched += FirstUpdateTick;
+            //GameEvents.FirstUpdateTick += FirstUpdateTick;
             Config = Helper.ReadConfig<ModConfig>();
         }
 
         public Vector2 GetDefaultSpawnPosition() {
-            var bed = (Utility.PointToVector2((Game1.player.currentLocation as StardewValley.Locations.FarmHouse).getBedSpot()) * Game1.tileSize);
+            var bed = (Utility.PointToVector2(((FarmHouse) Game1.player.currentLocation).getBedSpot()) * Game1.tileSize);
             bed.X -= Game1.tileSize; //Spawn a tile to the side of the bed to not instantly go to the sleep dialog
             return bed;
         }
